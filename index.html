@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte Brigadas Vacunan</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="contenedor">
+
+  <h2>REPORTE BRIGADAS VANCAN</h2>
+
+  <!-- LOGIN -->
+  <section id="loginSection" class="card-login">
+    <h3>Ingreso de usuarios</h3>
+
+    <label for="loginUsuario">Usuario</label>
+    <input type="text" id="loginUsuario" placeholder="Ingrese su usuario">
+
+    <label for="loginPassword">Contraseña</label>
+    <input type="password" id="loginPassword" placeholder="Ingrese su contraseña">
+
+    <button type="button" id="btnLogin">Ingresar</button>
+
+    <p id="loginMensaje" class="mensaje-login"></p>
+  </section>
+
+  <!-- FORMULARIO -->
+  <section id="formSection" style="display:none;">
+    <div class="barra-usuario">
+      <div>
+        <strong>Usuario autenticado:</strong>
+        <span id="usuarioActivoTexto">-</span>
+      </div>
+      <button type="button" id="btnLogout" class="btn-secundario">Cerrar sesión</button>
+    </div>
+
+    <form id="formulario">
+
+      <label>Tipo de reporte <span class="obligatorio">*</span></label>
+      <div class="opciones">
+        <label><input type="radio" name="tipo_reporte" value="Corto" required onchange="toggleFormSections('Corto')"> Corto</label>
+        <label><input type="radio" name="tipo_reporte" value="Detallado" onchange="toggleFormSections('Detallado')"> Detallado</label>
+      </div>
+
+      <hr>
+
+      <h3>I. DATOS GENERALES</h3>
+
+      <div class="fila-dos-columnas">
+        <div>
+          <label for="microred">Microred <span class="obligatorio">*</span></label>
+          <select id="microred" name="microred" required>
+            <option value="" selected disabled>Seleccione una microred...</option>
+            <option>Alto Selva Alegre</option>
+            <option>Ampliacion Paucarpata</option>
+            <option>Buenos Aires</option>
+            <option>Cerro Colorado</option>
+            <option>Characato</option>
+            <option>Chiguata</option>
+            <option>Ciudad Blanca</option>
+            <option>Ciudad de dios</option>
+            <option>Edificadores Misti</option>
+            <option>Francisco Bolognesi</option>
+            <option>Generalisimo San Martin</option>
+            <option>Javier Llosa Garcia</option>
+            <option>Mariano Melgar</option>
+            <option>Mariscal Castilla</option>
+            <option>Maritza Campos Diaz</option>
+            <option>Pedregal</option>
+            <option>Socabaya</option>
+            <option>Tiabaya</option>
+            <option>Victor Raul Hinojosa</option>
+            <option>Yanahuara</option>
+            <option>15 de Agosto</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="fila-dos-columnas">
+        <div>
+          <label>N° Grupo de vacunación</label>
+          <input type="text" id="num_grupo">
+        </div>
+        <div>
+        </div>
+      </div>
+
+      <div class="fila-dos-columnas">
+        <div>
+          <label>N° GPS</label>
+          <input type="text" id="num_gps">
+        </div>
+        <div>
+          <label>Fecha de vacunación <span class="obligatorio">*</span></label>
+          <input type="date" id="fecha_barrio" required>
+        </div>
+      </div>
+
+      <div>
+        <label>Usuario aplicativo</label>
+        <input type="text" id="usuario_app">
+      </div>
+
+      <div>
+        <label>Vacunador</label>
+        <input type="text" id="vacunador">
+      </div>
+
+      <div>
+        <label>Registrador</label>
+        <input type="text" id="registrador">
+      </div>
+
+      <div id="seccionCorto" style="display:none;">
+        <hr>
+        <h3>II. VACUNACIÓN</h3>
+        <label>1. Cantidad de animales vacunados</label>
+        <div style="margin-left: 20px;">
+          <div>
+            <label>Perros</label>
+            <input type="number" id="perros_corto" min="0" value="0" onchange="actualizarTotalCorto()" required>
+          </div>
+          <div>
+            <label>Gatos</label>
+            <input type="number" id="gatos_corto" min="0" value="0" onchange="actualizarTotalCorto()" required>
+          </div>
+        </div>
+        <br>
+        <label>2. ¿Algún comentario y/o sugerencia sobre la actividad de hoy?</label>
+        <textarea id="comentarios" rows="3" placeholder="Escriba aquí sus comentarios..."></textarea>
+      </div>
+
+      <div id="seccionDetallado" style="display:none;">
+        <hr>
+
+        <h3>II. EVENTOS</h3>
+
+      <label>1. ¿A qué hora tenías completo el material de vacunación? <span class="obligatorio">*</span></label>
+      <input type="time" id="hora_material" required>
+
+      <label>2. ¿A qué hora partiste del centro de salud a tu punto de vacunación? <span class="obligatorio">*</span></label>
+      <input type="time" id="hora_partida" required>
+
+      <label>3. ¿Cómo te movilizaste hasta tu punto de vacunación? <span class="obligatorio">*</span></label>
+      <div class="opciones">
+        <label><input type="radio" name="movil" value="Centro de salud" required> Centro de salud</label>
+        <label><input type="radio" name="movil" value="Bus"> Bus</label>
+        <label><input type="radio" name="movil" value="Minivan"> Minivan</label>
+        <label><input type="radio" name="movil" value="Camioneta"> Camioneta</label>
+        <label><input type="radio" name="movil" value="Auto"> Auto</label>
+        <label><input type="radio" name="movil" value="Caminando"> Caminando</label>
+        <label class="opcion-otro">
+          <input type="radio" name="movil" value="Otro"> Otro
+        </label>
+      </div>
+      <input type="text" id="otro_movil" placeholder="Especificar otro medio" disabled>
+
+      <label>4. ¿A qué hora llegaste a tu punto de vacunación? <span class="obligatorio">*</span></label>
+      <input type="time" id="hora_llegada" required>
+
+      <hr>
+
+      <h3>III. VACUNACIÓN</h3>
+
+      <label>5. ¿Qué indicaciones te dieron al comienzo de la vacunación? <span class="obligatorio">*</span></label>
+      <div class="opciones">
+        <label><input type="radio" name="indicacion" value="Verbal" required> Verbal</label>
+        <label><input type="radio" name="indicacion" value="Mapa en papel"> Mapa en papel</label>
+        <label><input type="radio" name="indicacion" value="Aplicativo móvil"> Aplicativo móvil</label>
+      </div>
+
+      <label>6. Tipo de punto y Cantidad de Animales vacunados</label>
+      <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+        <thead>
+          <tr style="background-color: #f0f0f0; border-bottom: 2px solid #333;">
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Punto</th>
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">P. Fijo</th>
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">P. Móvil</th>
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">Puerta a Puerta</th>
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">Nº PERROS</th>
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: center;">Nº GATOS</th>
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">¿Te cambiaron de punto?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- PUNTO 01 -->
+          <tr style="border-bottom: 1px solid #ccc;">
+            <td style="border: 1px solid #ccc; padding: 8px; font-weight: bold;">Punto 01</td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="radio" name="tipo_punto_p01" value="Fijo"></td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="radio" name="tipo_punto_p01" value="Móvil"></td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="radio" name="tipo_punto_p01" value="Puerta a Puerta"></td>
+            <td style="border: 1px solid #ccc; padding: 8px;"><input type="number" id="perros_p01" class="cantidad_animales" min="0" value="0" onchange="actualizarTotalDetallado()"></td>
+            <td style="border: 1px solid #ccc; padding: 8px;"><input type="number" id="gatos_p01" class="cantidad_animales" min="0" value="0" onchange="actualizarTotalDetallado()"></td>
+            <td style="border: 1px solid #ccc; padding: 8px;">
+              <label><input type="radio" name="cambio_p01" value="Si" onchange="togglePunto(2)"> Si</label>
+              <label><input type="radio" name="cambio_p01" value="No" onchange="togglePunto(2)"> No</label>
+            </td>
+          </tr>
+
+          <!-- PUNTO 02 -->
+          <tr id="fila_punto_02" style="display: none; border-bottom: 1px solid #ccc;">
+            <td style="border: 1px solid #ccc; padding: 8px; font-weight: bold;">Punto 02</td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="radio" name="tipo_punto_p02" value="Fijo"></td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="radio" name="tipo_punto_p02" value="Móvil"></td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="radio" name="tipo_punto_p02" value="Puerta a Puerta"></td>
+            <td style="border: 1px solid #ccc; padding: 8px;"><input type="number" id="perros_p02" class="cantidad_animales" min="0" value="0" onchange="actualizarTotalDetallado()"></td>
+            <td style="border: 1px solid #ccc; padding: 8px;"><input type="number" id="gatos_p02" class="cantidad_animales" min="0" value="0" onchange="actualizarTotalDetallado()"></td>
+            <td style="border: 1px solid #ccc; padding: 8px;">
+              <label><input type="radio" name="cambio_p02" value="Si" onchange="togglePunto(3)"> Si</label>
+              <label><input type="radio" name="cambio_p02" value="No" onchange="togglePunto(3)"> No</label>
+            </td>
+          </tr>
+
+          <!-- PUNTO 03 -->
+          <tr id="fila_punto_03" style="display: none; border-bottom: 1px solid #ccc;">
+            <td style="border: 1px solid #ccc; padding: 8px; font-weight: bold;">Punto 03</td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="radio" name="tipo_punto_p03" value="Fijo"></td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="radio" name="tipo_punto_p03" value="Móvil"></td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="radio" name="tipo_punto_p03" value="Puerta a Puerta"></td>
+            <td style="border: 1px solid #ccc; padding: 8px;"><input type="number" id="perros_p03" class="cantidad_animales" min="0" value="0" onchange="actualizarTotalDetallado()"></td>
+            <td style="border: 1px solid #ccc; padding: 8px;"><input type="number" id="gatos_p03" class="cantidad_animales" min="0" value="0" onchange="actualizarTotalDetallado()"></td>
+            <td style="border: 1px solid #ccc; padding: 8px;">-</td>
+          </tr>
+
+          <!-- TOTAL -->
+          <tr style="background-color: #f0f0f0; border-top: 2px solid #333; font-weight: bold;">
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: right;" colspan="4">Total animales vacunados al final de la vacunación</td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="number" id="total_perros_detallado" min="0" value="0" readonly style="background-color: #e8e8e8; font-weight: bold;"></td>
+            <td style="border: 1px solid #ccc; padding: 8px; text-align: center;"><input type="number" id="total_gatos_detallado" min="0" value="0" readonly style="background-color: #e8e8e8; font-weight: bold;"></td>
+            <td style="border: 1px solid #ccc; padding: 8px;"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label>7. ¿A qué hora terminaste de vacunar en CAMPO? <span class="obligatorio">*</span></label>
+      <input type="time" id="hora_termino" required>
+
+      <label>8. Comentarios y/o indicaciones recibidas sobre la vacunación</label>
+      <textarea id="comentarios_detallado" rows="5" placeholder="Escriba aquí sus comentarios..."></textarea>
+
+      </div>
+
+      <input type="hidden" id="usuario_logueado">
+      <input type="hidden" id="nombre_logueado">
+      <input type="hidden" id="total_perros" value="0">
+
+      <br><br>
+      <button type="submit">💾 Guardar formulario</button>
+    </form>
+  </section>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
