@@ -85,24 +85,17 @@
           <input type="text" id="num_grupo">
         </div>
         <div>
-        </div>
-      </div>
-
-      <div class="fila-dos-columnas">
-        <div>
           <label>N° GPS</label>
           <input type="text" id="num_gps">
-        </div>
-        <div>
-          <label>Fecha de vacunación <span class="obligatorio">*</span></label>
-          <input type="date" id="fecha_barrio" required>
         </div>
       </div>
 
       <div>
-        <label>Usuario aplicativo</label>
-        <input type="text" id="usuario_app">
+        <label>Fecha de vacunación <span class="obligatorio">*</span></label>
+        <input type="date" id="fecha_barrio" required>
       </div>
+
+      <div>
 
       <div>
         <label>Vacunador</label>
@@ -143,14 +136,14 @@
         <h3>II. EVENTOS</h3>
 
       <label>1. ¿A qué hora tenías completo el material de vacunación? <span class="obligatorio">*</span></label>
-      <input type="time" id="hora_material" required>
+      <input type="time" id="hora_material">
 
       <label>2. ¿A qué hora partiste del centro de salud a tu punto de vacunación? <span class="obligatorio">*</span></label>
-      <input type="time" id="hora_partida" required>
+      <input type="time" id="hora_partida">
 
       <label>3. ¿Cómo te movilizaste hasta tu punto de vacunación? <span class="obligatorio">*</span></label>
       <div class="opciones">
-        <label><input type="radio" name="movil" value="Centro de salud" required> Centro de salud</label>
+        <label><input type="radio" name="movil" value="Centro de salud"> Centro de salud</label>
         <label><input type="radio" name="movil" value="Bus"> Bus</label>
         <label><input type="radio" name="movil" value="Minivan"> Minivan</label>
         <label><input type="radio" name="movil" value="Camioneta"> Camioneta</label>
@@ -163,7 +156,7 @@
       <input type="text" id="otro_movil" placeholder="Especificar otro medio" disabled>
 
       <label>4. ¿A qué hora llegaste a tu punto de vacunación? <span class="obligatorio">*</span></label>
-      <input type="time" id="hora_llegada" required>
+      <input type="time" id="hora_llegada">
 
       <hr>
 
@@ -171,7 +164,7 @@
 
       <label>5. ¿Qué indicaciones te dieron al comienzo de la vacunación? <span class="obligatorio">*</span></label>
       <div class="opciones">
-        <label><input type="radio" name="indicacion" value="Verbal" required> Verbal</label>
+        <label><input type="radio" name="indicacion" value="Verbal"> Verbal</label>
         <label><input type="radio" name="indicacion" value="Mapa en papel"> Mapa en papel</label>
         <label><input type="radio" name="indicacion" value="Aplicativo móvil"> Aplicativo móvil</label>
       </div>
@@ -240,7 +233,7 @@
       </table>
 
       <label>7. ¿A qué hora terminaste de vacunar en CAMPO? <span class="obligatorio">*</span></label>
-      <input type="time" id="hora_termino" required>
+      <input type="time" id="hora_termino">
 
       <label>8. Comentarios y/o indicaciones recibidas sobre la vacunación</label>
       <textarea id="comentarios_detallado" rows="5" placeholder="Escriba aquí sus comentarios..."></textarea>
