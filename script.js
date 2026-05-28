@@ -22,9 +22,6 @@ function toggleFormSections(tipoReporte) {
     document.getElementById('hora_llegada').required = false;
     document.getElementById('hora_termino').required = false;
     
-    document.querySelectorAll('input[name="indicacion"]').forEach(input => {
-      input.required = false;
-    });
     document.querySelectorAll('input[name="movil"]').forEach(input => {
       input.required = false;
     });
@@ -43,13 +40,13 @@ function toggleFormSections(tipoReporte) {
     document.getElementById('hora_llegada').required = true;
     document.getElementById('hora_termino').required = true;
     
-    // Marcar radios como requeridos
-    document.querySelectorAll('input[name="indicacion"]').forEach(input => {
-      input.required = true;
-    });
+    // Marcar movil como requerido (es radio button)
     document.querySelectorAll('input[name="movil"]').forEach(input => {
       input.required = true;
     });
+    
+    // Para indicacion (checkboxes), la validación se hace manualmente en el submit
+    // No usamos .required porque no funciona bien con múltiples checkboxes
     
     // Remover required de campos Corto
     document.getElementById('perros_corto').required = false;
@@ -240,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const horaLlegada = document.getElementById('hora_llegada').value.trim();
       const horaTérmino = document.getElementById('hora_termino').value.trim();
       const movil = document.querySelector('input[name="movil"]:checked')?.value;
-      const indicacion = document.querySelector('input[name="indicacion"]:checked')?.value;
+      const indicacion = document.querySelector('input[name="indicacion"]:checked')?.value; // Al menos uno debe estar seleccionado
 
       if (!horaMaterial) {
         alert("Debe ingresar la hora en que completó el material de vacunación.");
@@ -263,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       if (!indicacion) {
-        alert("Debe seleccionar qué indicaciones recibió.");
+        alert("Debe seleccionar al menos una indicación recibida.");
         return;
       }
 
@@ -303,7 +300,12 @@ document.addEventListener('DOMContentLoaded', function () {
       data.append('movil', document.querySelector('input[name="movil"]:checked')?.value || '');
       data.append('otro_movil', document.getElementById('otro_movil')?.value || '');
       data.append('hora_llegada', document.getElementById('hora_llegada')?.value || '');
-      data.append('indicacion', document.querySelector('input[name="indicacion"]:checked')?.value || '');
+      
+      // Capturar todas las indicaciones seleccionadas (múltiples opciones)
+      const indicacionesSeleccionadas = Array.from(document.querySelectorAll('input[name="indicacion"]:checked'))
+        .map(el => el.value)
+        .join(', ');
+      data.append('indicacion', indicacionesSeleccionadas);
       
       // Datos de los puntos
       data.append('tipo_punto_p01', document.querySelector('input[name="tipo_punto_p01"]:checked')?.value || '');
