@@ -1,5 +1,11 @@
 const URL_WEB_APP = "https://script.google.com/macros/s/AKfycbyPObfZVC-ZN55eiD6jFDLrJbHXomy43cM90XGQ74XqQte8Luw7JrOKNMBoZcaNub4f1A/exec";
 
+// Verificar que la URL no esté vacía
+if (!URL_WEB_APP || URL_WEB_APP.includes('undefined')) {
+  console.error('❌ ERROR CRÍTICO: URL_WEB_APP no está configurada correctamente');
+  console.error('URL actual:', URL_WEB_APP);
+}
+
 let sesionUsuario = null;
 
 function toggleFormSections(tipoReporte) {
@@ -9,9 +15,28 @@ function toggleFormSections(tipoReporte) {
   if (tipoReporte === 'Corto') {
     seccionCorto.style.display = 'block';
     seccionDetallado.style.display = 'none';
+    
+    // Remover required de campos detallados
+    document.getElementById('hora_material').required = false;
+    document.getElementById('hora_partida').required = false;
+    document.getElementById('hora_llegada').required = false;
+    document.getElementById('hora_termino').required = false;
+    
+    document.querySelectorAll('input[name="indicacion"]').forEach(input => {
+      input.required = false;
+    });
+    document.querySelectorAll('input[name="movil"]').forEach(input => {
+      input.required = false;
+    });
+    
+    // Hacer requeridos los campos de Corto
+    document.getElementById('perros_corto').required = true;
+    document.getElementById('gatos_corto').required = true;
+    
   } else if (tipoReporte === 'Detallado') {
     seccionCorto.style.display = 'none';
     seccionDetallado.style.display = 'block';
+    
     // Hacer campos detallados requeridos
     document.getElementById('hora_material').required = true;
     document.getElementById('hora_partida').required = true;
@@ -25,6 +50,10 @@ function toggleFormSections(tipoReporte) {
     document.querySelectorAll('input[name="movil"]').forEach(input => {
       input.required = true;
     });
+    
+    // Remover required de campos Corto
+    document.getElementById('perros_corto').required = false;
+    document.getElementById('gatos_corto').required = false;
   }
 }
 
@@ -197,11 +226,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Validar según tipo de reporte
     if (tipoReporte === 'Corto') {
-      const perrosCorto = document.getElementById('perros_corto').value.trim();
-      const gatosCorto = document.getElementById('gatos_corto').value.trim();
+      const perrosCorto = parseInt(document.getElementById('perros_corto').value) || 0;
+      const gatosCorto = parseInt(document.getElementById('gatos_corto').value) || 0;
 
-      if (!perrosCorto || !gatosCorto) {
-        alert("Debe ingresar la cantidad de perros y gatos.");
+      if (perrosCorto === 0 && gatosCorto === 0) {
+        alert("Debe ingresar la cantidad de perros y/o gatos (mínimo 1).");
+        return;
+      }
+    } else if (tipoReporte === 'Detallado') {
+      // Validar campos requeridos del formulario detallado
+      const horaMaterial = document.getElementById('hora_material').value.trim();
+      const horaPartida = document.getElementById('hora_partida').value.trim();
+      const horaLlegada = document.getElementById('hora_llegada').value.trim();
+      const horaTérmino = document.getElementById('hora_termino').value.trim();
+      const movil = document.querySelector('input[name="movil"]:checked')?.value;
+      const indicacion = document.querySelector('input[name="indicacion"]:checked')?.value;
+
+      if (!horaMaterial) {
+        alert("Debe ingresar la hora en que completó el material de vacunación.");
+        return;
+      }
+
+      if (!horaPartida) {
+        alert("Debe ingresar la hora en que partió del centro de salud.");
+        return;
+      }
+
+      if (!movil) {
+        alert("Debe seleccionar cómo se movilizó hasta el punto de vacunación.");
+        return;
+      }
+
+      if (!horaLlegada) {
+        alert("Debe ingresar la hora en que llegó al punto de vacunación.");
+        return;
+      }
+
+      if (!indicacion) {
+        alert("Debe seleccionar qué indicaciones recibió.");
+        return;
+      }
+
+      if (!horaTérmino) {
+        alert("Debe ingresar la hora en que terminó de vacunar en campo.");
         return;
       }
     }
@@ -211,69 +278,106 @@ document.addEventListener('DOMContentLoaded', function () {
     data.append('action', 'guardar_vancan');
     data.append('tipo_reporte', tipoReporte);
 
-    data.append('usuario_logueado', document.getElementById('usuario_logueado').value);
-    data.append('nombre_logueado', document.getElementById('nombre_logueado').value);
+    data.append('usuario_logueado', document.getElementById('usuario_logueado')?.value || '');
+    data.append('nombre_logueado', document.getElementById('nombre_logueado')?.value || '');
 
-    data.append('microred', document.getElementById('microred').value);
-    data.append('fecha_barrio', document.getElementById('fecha_barrio').value);
-    data.append('num_grupo', document.getElementById('num_grupo').value);
-    data.append('num_gps', document.getElementById('num_gps').value);
-    data.append('vacunador', document.getElementById('vacunador').value);
-    data.append('usuario_app', document.getElementById('usuario_app').value);
-    data.append('registrador', document.getElementById('registrador').value);
+    data.append('microred', document.getElementById('microred')?.value || '');
+    data.append('fecha_barrio', document.getElementById('fecha_barrio')?.value || '');
+    data.append('num_grupo', document.getElementById('num_grupo')?.value || '');
+    data.append('num_gps', document.getElementById('num_gps')?.value || '');
+    data.append('vacunador', document.getElementById('vacunador')?.value || '');
+    data.append('usuario_app', document.getElementById('usuario_app')?.value || '');
+    data.append('registrador', document.getElementById('registrador')?.value || '');
 
     if (tipoReporte === 'Corto') {
-      data.append('perros_corto', document.getElementById('perros_corto').value);
-      data.append('gatos_corto', document.getElementById('gatos_corto').value);
-      const perrosCorto = parseInt(document.getElementById('perros_corto').value || 0);
-      const gatosCorto = parseInt(document.getElementById('gatos_corto').value || 0);
+      data.append('perros_corto', document.getElementById('perros_corto')?.value || 0);
+      data.append('gatos_corto', document.getElementById('gatos_corto')?.value || 0);
+      const perrosCorto = parseInt(document.getElementById('perros_corto')?.value || 0);
+      const gatosCorto = parseInt(document.getElementById('gatos_corto')?.value || 0);
       data.append('total_perros', perrosCorto + gatosCorto);
-      data.append('comentarios', document.getElementById('comentarios').value);
+      data.append('comentarios', document.getElementById('comentarios')?.value || '');
     } else {
       // Datos del reporte detallado
-      data.append('hora_material', document.getElementById('hora_material').value);
-      data.append('hora_partida', document.getElementById('hora_partida').value);
+      data.append('hora_material', document.getElementById('hora_material')?.value || '');
+      data.append('hora_partida', document.getElementById('hora_partida')?.value || '');
       data.append('movil', document.querySelector('input[name="movil"]:checked')?.value || '');
-      data.append('otro_movil', document.getElementById('otro_movil').value);
-      data.append('hora_llegada', document.getElementById('hora_llegada').value);
+      data.append('otro_movil', document.getElementById('otro_movil')?.value || '');
+      data.append('hora_llegada', document.getElementById('hora_llegada')?.value || '');
       data.append('indicacion', document.querySelector('input[name="indicacion"]:checked')?.value || '');
       
       // Datos de los puntos
       data.append('tipo_punto_p01', document.querySelector('input[name="tipo_punto_p01"]:checked')?.value || '');
-      data.append('perros_p01', document.getElementById('perros_p01').value);
-      data.append('gatos_p01', document.getElementById('gatos_p01').value);
+      data.append('perros_p01', document.getElementById('perros_p01')?.value || 0);
+      data.append('gatos_p01', document.getElementById('gatos_p01')?.value || 0);
       data.append('cambio_p01', document.querySelector('input[name="cambio_p01"]:checked')?.value || '');
       
       // Punto 02 (si existe)
-      if (document.getElementById('fila_punto_02').style.display !== 'none') {
+      if (document.getElementById('fila_punto_02')?.style.display !== 'none') {
         data.append('tipo_punto_p02', document.querySelector('input[name="tipo_punto_p02"]:checked')?.value || '');
-        data.append('perros_p02', document.getElementById('perros_p02').value);
-        data.append('gatos_p02', document.getElementById('gatos_p02').value);
+        data.append('perros_p02', document.getElementById('perros_p02')?.value || 0);
+        data.append('gatos_p02', document.getElementById('gatos_p02')?.value || 0);
         data.append('cambio_p02', document.querySelector('input[name="cambio_p02"]:checked')?.value || '');
       }
       
       // Punto 03 (si existe)
-      if (document.getElementById('fila_punto_03').style.display !== 'none') {
+      if (document.getElementById('fila_punto_03')?.style.display !== 'none') {
         data.append('tipo_punto_p03', document.querySelector('input[name="tipo_punto_p03"]:checked')?.value || '');
-        data.append('perros_p03', document.getElementById('perros_p03').value);
-        data.append('gatos_p03', document.getElementById('gatos_p03').value);
+        data.append('perros_p03', document.getElementById('perros_p03')?.value || 0);
+        data.append('gatos_p03', document.getElementById('gatos_p03')?.value || 0);
       }
       
-      data.append('total_perros_detallado', document.getElementById('total_perros_detallado').value);
-      data.append('total_gatos_detallado', document.getElementById('total_gatos_detallado').value);
+      data.append('total_perros_detallado', document.getElementById('total_perros_detallado')?.value || 0);
+      data.append('total_gatos_detallado', document.getElementById('total_gatos_detallado')?.value || 0);
       data.append('hora_termino', document.getElementById('hora_termino').value);
       data.append('comentarios_detallado', document.getElementById('comentarios_detallado').value);
     }
 
+    console.log('%c🔍 INICIANDO ENVÍO DE DATOS', 'color: blue; font-weight: bold; font-size: 14px');
+    console.log('URL del servidor:', URL_WEB_APP);
+    console.log('Tipo de reporte:', tipoReporte);
+    console.log('Datos (FormData):', data);
+
+    // Crear un timeout para detectar si la solicitud cuelga
+    let timeoutId = setTimeout(() => {
+      console.error('%c⏱️ TIMEOUT: La solicitud tardó más de 15 segundos sin respuesta', 'color: red; font-weight: bold');
+      alert('⚠️ Timeout: El servidor no responde. Verifique:\n1. Su conexión a internet\n2. Que la URL del Web App sea correcta\n3. Que el Apps Script esté desplegado');
+    }, 15000);
+
     try {
+      console.log('%c📤 Enviando solicitud POST...', 'color: green');
+      
       const res = await fetch(URL_WEB_APP, {
         method: 'POST',
-        body: data
+        body: data,
+        mode: 'cors',
+        credentials: 'omit'
       });
 
-      const json = await res.json();
+      clearTimeout(timeoutId);
+
+      console.log('%c✓ Respuesta recibida', 'color: green; font-weight: bold');
+      console.log('Estado HTTP:', res.status, res.statusText);
+
+      if (!res.ok) {
+        console.error('%c❌ Error HTTP:', 'color: red; font-weight: bold', res.status, res.statusText);
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+
+      const text = await res.text();
+      console.log('Respuesta del servidor (texto):', text);
+
+      let json;
+      try {
+        json = JSON.parse(text);
+        console.log('Respuesta del servidor (JSON):', json);
+      } catch (parseError) {
+        console.error('%c❌ Error al parsear JSON:', 'color: red', parseError);
+        console.error('Texto recibido:', text);
+        throw new Error('El servidor no devolvió un JSON válido: ' + text.substring(0, 100));
+      }
 
       if (json.success) {
+        console.log('%c✅ ÉXITO: Datos guardados correctamente', 'color: green; font-weight: bold; font-size: 14px');
         alert('✅ Datos guardados correctamente');
         document.getElementById('formulario').reset();
         document.getElementById('seccionCorto').style.display = 'none';
@@ -287,12 +391,21 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('usuario_logueado').value = sesionUsuario.usuario;
         document.getElementById('nombre_logueado').value = sesionUsuario.nombre;
       } else {
-        alert('❌ ' + (json.message || 'No se pudo guardar.'));
-        console.error('Error del servidor:', json);
+        console.error('%c❌ Error del servidor:', 'color: red; font-weight: bold', json);
+        alert('❌ Error: ' + (json.message || 'No se pudo guardar.'));
       }
     } catch (error) {
-      console.error('Error de conexión:', error);
-      alert('⚠️ Error al conectar con el servidor. Verifique su conexión a internet y que la URL sea correcta.');
+      clearTimeout(timeoutId);
+      console.error('%c❌ ERROR DE CONEXIÓN', 'color: red; font-weight: bold; font-size: 14px');
+      console.error('Mensaje de error:', error.message);
+      console.error('Stack completo:', error.stack);
+      
+      let mensajeUsuario = '⚠️ Error: ' + error.message;
+      if (error.message.includes('Failed to fetch')) {
+        mensajeUsuario += '\n\nProbables causas:\n• Problema de CORS\n• URL incorrecta\n• Servidor no disponible';
+      }
+      
+      alert(mensajeUsuario + '\n\nRevise la consola (F12) para más detalles.');
     }
   });
 });
